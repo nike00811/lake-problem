@@ -1,14 +1,25 @@
 int count = 1;
-int a[][] = {{0, 1, 2, 3, 0}, {1, 0, 0, 1, 0}, {0, 2, 0, 0, 4}, {1, 0, 3, 0, 2}, {2, 0, 4, 3, 0}};
-int b[][] = {{0, 0, 0, 0, 0, 0, 0}, {0, 0, 1, 2, 3, 0, 0}, {0, 1, 0, 0, 1, 0, 0}, {0, 0, 2, 0, 0, 4, 0}, {0, 1, 0, 3, 0, 2, 0}, {0, 2, 0, 4, 3, 0, 0}, {0, 0, 0, 0, 0, 0, 0}};
-int sum[] = {0};
+int a[][] = {{0, 0, 0, 0, 0, 0, 0}, 
+  {0, 0, 1, 2, 3, 0, 0}, 
+  {0, 1, 0, 0, 1, 0, 0}, 
+  {0, 0, 2, 0, 0, 4, 0}, 
+  {0, 1, 0, 3, 0, 2, 0}, 
+  {0, 2, 0, 4, 3, 0, 0}, 
+  {0, 0, 0, 0, 0, 0, 0}};
+int b[][] = new int[20][20];
+int left[][] = {{0, 0}, {0, 79}, {79, 0}, {79, 79}};
+
 int dx[] = {-1, 0, 1, 0};
 int dy[] = {0, 1, 0, -1};
+final int N = 5 ;
 
 void setup()
 {
+  // size(1200, 1200);   // for the file
   size(400, 400);
-  background(0);        // background is black
+  background(0);        // map is black
+  init() ;
+  // read the file
 } 
 
 void draw()
@@ -20,16 +31,16 @@ void draw()
     for (int j = 0; j < width; j+=80)
     {
       stroke(0);      // draw the black line
-
-      if (a[m][n] == 0)
-        fill(255);
-      if (a[m][n] == 1)
+      int temp = a[m][n];
+      if (temp == 0)
+        fill(255, 255, 255);
+      if (temp == 1)
         fill(171, 209, 208);
-      if (a[m][n] == 2)
+      if (temp == 2)
         fill(111, 187, 177);
-      if (a[m][n] == 3)
+      if (temp == 3)
         fill(111, 153, 148);
-      if (a[m][n] == 4)
+      if (temp == 4)
         fill(87, 129, 126);
       rect(i, j, 79, 79);
       n++;
@@ -38,19 +49,13 @@ void draw()
   }
 }  
 
-void mousePressed()
+void init()
 {
-  for (int i = 1; i < 7; i++)
+  for (int i = 0; i <= N; i++)
   {
-    for (int j = 1; j < 7; j++)
-    {
-      if (a[i][j] != 0 && b[i][j] == 0)
-      {
-        b[i][j] = count;
-        count++;
-        dfs(i, j);
-      }
-    }
+    for (int j = 0; j <= N; j++)
+      b[i][j] = 0 ;
+    a[0][i] = a[i][0] = a[N+1][i] = a[i][N+1] ;
   }
 }
 
@@ -66,4 +71,31 @@ void dfs(int i, int j)
       dfs(tx, ty);
     }
   }
+}
+
+void mousePressed()
+{
+  int sum[] = new int[120];
+  for (int i = 0; i < 120; i++)
+    sum[i] = 0 ;
+  for (int i = 1; i <= N; i++)
+    for (int j = 1; j <= N; j++)
+      if (a[i][j] != 0 && b[i][j] == 0)
+      {
+        b[i][j] = count;
+        count++;
+        dfs(i, j);
+      }
+  for (int i = 1; i <= N; i++)
+    for (int j = 1; j <= N; j++)
+      sum[b[i][j]] += a[i][j];
+
+  int max = -1, index = 0 ;
+  for (int i = 0; i < count; i++)
+    if (sum[i] > max)
+    {
+      max = sum[i];
+      index = i;
+    }
+  println(index+"    "+max) ;
 }
