@@ -43,30 +43,4 @@ void draw()
 
 void mousePressed()
 {
-  for (int i = 1; i < 6; i++)
-  {
-    for (int j = 1; j < 6; j++)
-    {
-      if (a[i][j] != 0 && b[i][j] == 0)
-      {
-        b[i][j] = count;
-        count++;
-        dfs(i, j);
-      }
-    }
-  }
-}
-
-void dfs(int i, int j)
-{
-  for (int k = 0; k < 4; k++)
-  {
-    int tx = i + dx[k];
-    int ty = j + dy[k];
-    if (a[tx][ty] != 0 && b[tx][ty] == 0)
-    {
-      b[tx][ty] = b[i][j];
-      dfs(tx, ty);
-    }
-  }
 }
