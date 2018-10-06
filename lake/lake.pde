@@ -9,6 +9,7 @@ int dy[] = {0, 1, 0, -1};
 void setup()
 {
   // size(1200, 1200);   // for the file
+  String[] s = loadStrings("input.txt");
   size(400, 400);
   background(0);        // map is black
   // read the file
