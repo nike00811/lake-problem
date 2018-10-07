@@ -41,7 +41,7 @@ class Cell
       fill(111, 153, 148);
     if (temp == 4)
       fill(87, 129, 126);
-    rect(x, y, w, h);
+    rect(y, x, w, h);
   }
 
   void currentColor()
@@ -49,7 +49,7 @@ class Cell
     noLoop();
     stroke(0);
     fill(232, 217, 169);
-    rect(x, y, w, h);
+    rect(y, x, w, h);
   }
 
   void markedColor()
@@ -57,7 +57,7 @@ class Cell
     noLoop();
     stroke(0);
     fill(207, 155, 161);
-    rect(x, y, w, h);
+    rect(y, x, w, h);
   }
 
   void largestColor()
@@ -65,7 +65,7 @@ class Cell
     noLoop();
     stroke(0);
     fill(113, 166, 205);
-    rect(x, y, w, h);
+    rect(y, x, w, h);
   }
 }
 
@@ -120,7 +120,6 @@ void mousePressed()
     sum[i] = 0;
 
   run();
-  check();
 
   for (int i = 1; i <= N; i++)
     for (int j = 1; j <= N; j++)
@@ -142,10 +141,11 @@ void dfs(int i, int j)
   {
     int tx = i + dx[k];
     int ty = j + dy[k];
+    grid[i-1][j-1].currentColor();
     if (a[tx][ty] != 0 && b[tx][ty] == 0)
     {
       b[tx][ty] = b[i][j];
-      grid[i-1][j-1].currentColor();
+      grid[i-1][j-1].markedColor();
       dfs(tx, ty);
     }
   }
@@ -154,13 +154,17 @@ void dfs(int i, int j)
 void run()
 {
   for (int i = 1; i <= N; i++)                // the process of dfs
+  {
     for (int j = 1; j <= N; j++)
+    {
       if (a[i][j] != 0 && b[i][j] == 0)
       {
         b[i][j] = count;
         count++;
         dfs(i, j);
       }
+    }
+  }
 }
 
 void check(int index)
