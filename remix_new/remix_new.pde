@@ -9,7 +9,6 @@ int a[][] = {{0, 0, 0, 0, 0, 0, 0},
   {0, 2, 0, 4, 3, 0, 0}, 
   {0, 0, 0, 0, 0, 0, 0}};
 int b[][] = new int[20][20];
-int left[][] = {{0, 0}, {0, 79}, {79, 0}, {79, 79}};
 int w[] = {0, 1, 2, 3, 4};
 int sum[] = new int[120];
 int dx[] = {-1, 0, 1, 0};
@@ -48,6 +47,7 @@ class Cell
   {
     stroke(0, 50);
     fill(232, 217, 169);
+    println(y+"  "+x) ;
     rect(y, x, w, h);
   }
 
@@ -86,10 +86,10 @@ void setup()
 //  frameRate(4);
   size(400, 400);
   background(0);
-  grid = new Cell[rows][cols];
-  for (int i = 0; i < rows; i++)
+  grid = new Cell[N+2][N+2];
+  for (int i = 0; i < N+2; i++)
   {
-    for (int j = 0; j < cols; j++)
+    for (int j = 0; j < N+2; j++)
     {
       grid[i][j] = new Cell(i*80, j*80, 80, 80);
     }
@@ -121,7 +121,7 @@ void init()
 
 void draw()
 {
-  delay(2000);
+  //delay(2000);
   for (int i = 1; i <= N; i++)                // the process of dfs
   {
     for (int j = 1; j <= N; j++)
@@ -131,13 +131,13 @@ void draw()
         grid[i-1][j-1].currentColor();
         b[i][j] = count;
         count++;
-        delay(1000);
+        //delay(1000);
         grid[i-1][j-1].returnColor(i,j);
         dfs(i, j);
       }
     }
   }
-  delay(2000);
+  //delay(2000);
   Max();
 }
 
@@ -147,15 +147,16 @@ void dfs(int i, int j)
   {
     int tx = i + dx[k];
     int ty = j + dy[k];
+    println(tx+"___"+ty) ;
     grid[tx][ty].currentColor();      // the wall cannot be colored since it is beyond array boundary
-    delay(1000);
+    //delay(1000);
     if (a[tx][ty] != 0 && b[tx][ty] == 0)
     {
       b[tx][ty] = b[i][j];
       grid[tx][ty].markedColor();
-      delay(1000);
+      //delay(1000);
       grid[tx][ty].returnColor(tx,ty);
-      delay(1000);
+      //delay(1000);
       dfs(tx, ty);
     }
   }
