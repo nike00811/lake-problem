@@ -14,7 +14,7 @@ int w[] = {0, 1, 2, 3, 4};
 int sum[] = new int[120];
 int dx[] = {-1, 0, 1, 0};
 int dy[] = {0, 1, 0, -1};
-final int N = 5 ;
+final int N = 5;
 
 class Cell
 {
@@ -51,7 +51,7 @@ class Cell
     fill(232, 217, 169);
     rect(x, y, w, h);
   }
-  
+
   void markedColor()
   {
     noLoop();
@@ -59,18 +59,19 @@ class Cell
     fill(207, 155, 161);
     rect(x, y, w, h);
   }
-  
+
   void largestColor()
   {
     noLoop();
     stroke(0);
     fill(113, 166, 205);
     rect(x, y, w, h);
-  }  
+  }
 }
 
 void setup()
 {
+  frameRate(4);
   size(400, 400);
   background(0);
   grid = new Cell[rows][cols];
@@ -93,7 +94,9 @@ void draw()
     for (int j = 0; j < cols; j++) 
     {
       int temp = a[m][n];
+      //print("mn = " + m + " " + n);
       grid[i][j].display(temp);
+      //println(" , ij = " + i + " " + j);
       n++;
     }
     m++;
@@ -106,25 +109,19 @@ void init()
   {
     for (int j = 0; j <= N; j++)
       b[i][j] = 0;
-    a[0][i] = a[i][0] = a[N+1][i] = a[i][N+1];
+    a[0][i] = a[i][0] = a[N+1][i] = a[i][N+1];        // build the wall
   }
 }
 
 void mousePressed()
 {
-   int sum[] = new int[120];
+  int sum[] = new int[120];
   for (int i = 0; i < 120; i++)
     sum[i] = 0;
-    
-  for (int i = 1; i <= N; i++)
-    for (int j = 1; j <= N; j++)
-      if (a[i][j] != 0 && b[i][j] == 0)
-      {
-        b[i][j] = count;
-        count++;
-        dfs(i, j);
-      }
-      
+
+  run();
+  check();
+
   for (int i = 1; i <= N; i++)
     for (int j = 1; j <= N; j++)
       sum[b[i][j]] += a[i][j];
@@ -150,6 +147,32 @@ void dfs(int i, int j)
       b[tx][ty] = b[i][j];
       grid[i-1][j-1].currentColor();
       dfs(tx, ty);
+    }
+  }
+}
+
+void run()
+{
+  for (int i = 1; i <= N; i++)                // the process of dfs
+    for (int j = 1; j <= N; j++)
+      if (a[i][j] != 0 && b[i][j] == 0)
+      {
+        b[i][j] = count;
+        count++;
+        dfs(i, j);
+      }
+}
+
+void check(int index)
+{
+  for(int i = 1; i <= N; i++)
+  {
+    for(int j = 1; j <= N; j++)
+    {
+      if(b[i][j] == index)
+      {
+        grid[i-1][j-1].markedColor();
+      }
     }
   }
 }
