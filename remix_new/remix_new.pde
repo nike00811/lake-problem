@@ -60,6 +60,7 @@ class Cell
 
   void returnColor(int i, int j)
   {
+    stroke(0, 50);
     int temp = a[i][j];
     if (temp == 1)
       fill(171, 209, 208);
@@ -69,12 +70,12 @@ class Cell
       fill(111, 153, 148);
     if (temp == 4)
       fill(87, 129, 126);
+    rect(y, x, w, h);
   }
 
   void largestColor()
   {
-    loop();
-    stroke(0);
+    stroke(0, 50);
     fill(113, 166, 205);
     rect(y, x, w, h);
   }
@@ -82,7 +83,7 @@ class Cell
 
 void setup()
 {
-  frameRate(4);
+//  frameRate(4);
   size(400, 400);
   background(0);
   grid = new Cell[rows][cols];
@@ -93,7 +94,7 @@ void setup()
       grid[i][j] = new Cell(i*80, j*80, 80, 80);
     }
   }
-  init();
+  init();    // build the wall
   int m = 1;
   for (int i = 0; i < rows; i++)
   {
@@ -105,6 +106,16 @@ void setup()
       n++;
     }
     m++;
+  }
+}
+
+void init()
+{
+  for (int i = 0; i <= N; i++)
+  {
+    for (int j = 0; j <= N; j++)
+      b[i][j] = 0;
+    a[0][i] = a[i][0] = a[N+1][i] = a[i][N+1];       
   }
 }
 
@@ -120,6 +131,8 @@ void draw()
         grid[i-1][j-1].currentColor();
         b[i][j] = count;
         count++;
+        delay(1000);
+        grid[i-1][j-1].returnColor(i,j);
         dfs(i, j);
       }
     }
@@ -128,13 +141,23 @@ void draw()
   Max();
 }
 
-void init()
+void dfs(int i, int j)
 {
-  for (int i = 0; i <= N; i++)
+  for (int k = 0; k < 4; k++)
   {
-    for (int j = 0; j <= N; j++)
-      b[i][j] = 0;
-    a[0][i] = a[i][0] = a[N+1][i] = a[i][N+1];        // build the wall
+    int tx = i + dx[k];
+    int ty = j + dy[k];
+    grid[tx][ty].currentColor();      // the wall cannot be colored since it is beyond array boundary
+    delay(1000);
+    if (a[tx][ty] != 0 && b[tx][ty] == 0)
+    {
+      b[tx][ty] = b[i][j];
+      grid[tx][ty].markedColor();
+      delay(1000);
+      grid[tx][ty].returnColor(tx,ty);
+      delay(1000);
+      dfs(tx, ty);
+    }
   }
 }
 
@@ -157,22 +180,6 @@ void Max()
     }
   println(index+"    "+max);      // print the volume of the largest lake
   drawMax(index);
-}
-
-void dfs(int i, int j)
-{
-  for (int k = 0; k < 4; k++)
-  {
-    int tx = i + dx[k];
-    int ty = j + dy[k];
-    grid[i-1][j-1].currentColor();
-    if (a[tx][ty] != 0 && b[tx][ty] == 0)
-    {
-      b[tx][ty] = b[i][j];
-      grid[i-1][j-1].markedColor();
-      dfs(tx, ty);
-    }
-  }
 }
 
 void drawMax(int index)
