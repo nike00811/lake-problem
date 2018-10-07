@@ -100,9 +100,9 @@ void setup()
 
   for (int i = 1; i <= N ; i++)
     for (int j = 1; j <= N ; j++) 
-      grid[i][j].display(a[i+1][j+1]);
+      grid[i][j].display(a[i][j]);
   
-  main1() ;
+  //main1() ;
 }
 
 void init()
@@ -149,7 +149,7 @@ void dfs(int i, int j)
   {
     int tx = i + dx[k];
     int ty = j + dy[k];
-    println(i+"___"+j) ;
+    //println(i+"___"+j) ;
     if( tx < 1 || tx > N || ty < 1 || ty > N )
       continue ;
     grid[tx][ty].currentColor();      // the wall cannot be colored since it is beyond array boundary
