@@ -89,16 +89,17 @@ void setup()
   //  frameRate(4);
   size(400, 400);
   background(0);
-  init();    // build the wall & init b[][] = {0}
+  
   
   grid = new Cell[20][20];
-  for (int i = 0; i <= N+1; i++)
-    for (int j = 0; j <= N+1; j++)
-      grid[i][j] = new Cell(i*80, j*80, 80, 80);
-  
+  for (int i = 0; i <= N; i++)
+    for (int j = 0; j <= N; j++)
+      grid[i+1][j+1] = new Cell(i*80, j*80, 80, 80);
+      
+  init();    //a,grid build the wall & init b[][] = {0}
 
-  for (int i = 0; i < N ; i++)
-    for (int j = 0; j < N ; j++) 
+  for (int i = 1; i <= N ; i++)
+    for (int j = 1; j <= N ; j++) 
       grid[i][j].display(a[i+1][j+1]);
   
   main1() ;
@@ -108,7 +109,11 @@ void init()
 {
   for (int i = 0; i <= N; i++)
   {
-    a[0][i] = a[i][0] = a[N+1][i] = a[i][N+1];
+    a[0][i] = a[i][0] = a[N+1][i] = a[i][N+1] = 0 ;
+    //grid[0][i] = new Cell(0, 0, 80, 80) ; 
+    //grid[i][i] = new Cell(0, 0, 80, 80) ;
+    //grid[N+1][i] = new Cell(0, 0, 80, 80) ;
+    //grid[i][N+1] = new Cell(0, 0, 80, 80) ;
     for (int j = 0; j <= N; j++)
       b[i][j] = 0;
   }
@@ -125,11 +130,11 @@ void main1()
     {
       if (a[i][j] != 0 && b[i][j] == 0)
       {
-        grid[i-1][j-1].currentColor();
+        grid[i][j].currentColor();
         b[i][j] = count;
         count++;
         //delay(1000);
-        grid[i-1][j-1].returnColor(i, j);
+        grid[i][j].returnColor(i, j);
         dfs(i, j);
       }
     }
@@ -145,6 +150,8 @@ void dfs(int i, int j)
     int tx = i + dx[k];
     int ty = j + dy[k];
     println(i+"___"+j) ;
+    if( tx < 1 || tx > N || ty < 1 || ty > N )
+      continue ;
     grid[tx][ty].currentColor();      // the wall cannot be colored since it is beyond array boundary
     //delay(1000);
     if (a[tx][ty] != 0 && b[tx][ty] == 0)
@@ -188,7 +195,7 @@ void drawMax(int index)
     {
       if (b[i][j] == index)
       {
-        grid[i-1][j-1].largestColor();
+        grid[i][j].largestColor();
       }
     }
   }
