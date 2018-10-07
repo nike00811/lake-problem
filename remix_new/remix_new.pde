@@ -2,17 +2,18 @@ Cell[][] grid;
 int rows = 5, cols = 5;
 int count = 1;
 int a[][] = {{0, 0, 0, 0, 0, 0, 0}, 
-  {0, 0, 1, 2, 3, 0, 0}, 
-  {0, 1, 0, 0, 1, 0, 0}, 
-  {0, 0, 2, 0, 0, 4, 0}, 
-  {0, 1, 0, 3, 0, 2, 0}, 
-  {0, 2, 0, 4, 3, 0, 0}, 
-  {0, 0, 0, 0, 0, 0, 0}};
+             {0, 0, 1, 2, 3, 0, 0}, 
+             {0, 1, 0, 0, 1, 0, 0}, 
+             {0, 0, 2, 0, 0, 4, 0}, 
+             {0, 1, 0, 3, 0, 2, 0}, 
+             {0, 2, 0, 4, 3, 0, 0}, 
+             {0, 0, 0, 0, 0, 0, 0}};
 int b[][] = new int[20][20];
 int w[] = {0, 1, 2, 3, 4};
 int sum[] = new int[120];
 int dx[] = {-1, 0, 1, 0};
 int dy[] = {0, 1, 0, -1};
+color color_arr[] = {color(255, 255, 255),color(171, 209, 208),color(111, 187, 177),color(111, 153, 148),color(87, 129, 126)} ;
 final int N = 5;
 
 class Cell
@@ -30,16 +31,17 @@ class Cell
   void display(int temp)
   {
     stroke(0, 50);
-    if (temp == 0)
-      fill(255, 255, 255);
-    if (temp == 1)
-      fill(171, 209, 208);
-    if (temp == 2)
-      fill(111, 187, 177);
-    if (temp == 3)
-      fill(111, 153, 148);
-    if (temp == 4)
-      fill(87, 129, 126);
+    fill( color_arr[temp] ) ;
+    //if (temp == 0)
+    //  fill(255, 255, 255);
+    //if (temp == 1)
+    //  fill(171, 209, 208);
+    //if (temp == 2)
+    //  fill(111, 187, 177);
+    //if (temp == 3)
+    //  fill(111, 153, 148);
+    //if (temp == 4)
+    //  fill(87, 129, 126);
     rect(y, x, w, h);
   }
 
@@ -47,7 +49,6 @@ class Cell
   {
     stroke(0, 50);
     fill(232, 217, 169);
-    println(y+"  "+x) ;
     rect(y, x, w, h);
   }
 
@@ -61,65 +62,61 @@ class Cell
   void returnColor(int i, int j)
   {
     stroke(0, 50);
-    int temp = a[i][j];
-    if (temp == 1)
-      fill(171, 209, 208);
-    if (temp == 2)
-      fill(111, 187, 177);
-    if (temp == 3)
-      fill(111, 153, 148);
-    if (temp == 4)
-      fill(87, 129, 126);
+    fill( color_arr[a[i][j]] ) ;
+    //int temp = a[i][j];
+    //if (temp == 1)
+    //  fill(171, 209, 208);
+    //if (temp == 2)
+    //  fill(111, 187, 177);
+    //if (temp == 3)
+    //  fill(111, 153, 148);
+    //if (temp == 4)
+    //  fill(87, 129, 126);
     rect(y, x, w, h);
   }
 
   void largestColor()
   {
     stroke(0, 50);
-    fill(113, 166, 205);
+    //fill(113, 166, 205);
+    fill(128) ;
     rect(y, x, w, h);
   }
 }
 
 void setup()
 {
-//  frameRate(4);
+  //  frameRate(4);
   size(400, 400);
   background(0);
-  grid = new Cell[N+2][N+2];
-  for (int i = 0; i < N+2; i++)
-  {
-    for (int j = 0; j < N+2; j++)
-    {
+  init();    // build the wall & init b[][] = {0}
+  
+  grid = new Cell[20][20];
+  for (int i = 0; i <= N+1; i++)
+    for (int j = 0; j <= N+1; j++)
       grid[i][j] = new Cell(i*80, j*80, 80, 80);
-    }
-  }
-  init();    // build the wall
-  int m = 1;
-  for (int i = 0; i < rows; i++)
-  {
-    int n = 1;
-    for (int j = 0; j < cols; j++) 
-    {
-      int temp = a[m][n];
-      grid[i][j].display(temp);
-      n++;
-    }
-    m++;
-  }
+  
+
+  for (int i = 0; i < N ; i++)
+    for (int j = 0; j < N ; j++) 
+      grid[i][j].display(a[i+1][j+1]);
+  
+  main1() ;
 }
 
 void init()
 {
   for (int i = 0; i <= N; i++)
   {
+    a[0][i] = a[i][0] = a[N+1][i] = a[i][N+1];
     for (int j = 0; j <= N; j++)
       b[i][j] = 0;
-    a[0][i] = a[i][0] = a[N+1][i] = a[i][N+1];       
   }
 }
+void draw() {
+}
 
-void draw()
+void main1()
 {
   //delay(2000);
   for (int i = 1; i <= N; i++)                // the process of dfs
@@ -132,7 +129,7 @@ void draw()
         b[i][j] = count;
         count++;
         //delay(1000);
-        grid[i-1][j-1].returnColor(i,j);
+        grid[i-1][j-1].returnColor(i, j);
         dfs(i, j);
       }
     }
@@ -147,7 +144,7 @@ void dfs(int i, int j)
   {
     int tx = i + dx[k];
     int ty = j + dy[k];
-    println(tx+"___"+ty) ;
+    println(i+"___"+j) ;
     grid[tx][ty].currentColor();      // the wall cannot be colored since it is beyond array boundary
     //delay(1000);
     if (a[tx][ty] != 0 && b[tx][ty] == 0)
@@ -155,7 +152,7 @@ void dfs(int i, int j)
       b[tx][ty] = b[i][j];
       grid[tx][ty].markedColor();
       //delay(1000);
-      grid[tx][ty].returnColor(tx,ty);
+      grid[tx][ty].returnColor(tx, ty);
       //delay(1000);
       dfs(tx, ty);
     }
@@ -179,7 +176,7 @@ void Max()
       max = sum[i];
       index = i;
     }
-  println(index+"    "+max);      // print the volume of the largest lake
+  //println(index+"    "+max);      // print the volume of the largest lake
   drawMax(index);
 }
 
