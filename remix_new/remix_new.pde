@@ -15,7 +15,7 @@ int dx[] = {-1, 0, 1, 0};
 int dy[] = {0, 1, 0, -1};
 color color_arr[] = {color(255, 255, 255), color(171, 209, 208), color(111, 187, 177), color(111, 153, 148), color(87, 129, 126)} ;
 final int N = 5;
-final int dt = 0 ;//delaytime
+final int dt = 200 ;//delaytime
 
 void setup()
 {
@@ -42,10 +42,12 @@ void setup()
     for(int j = N ; j >= 1 ; j--)
     {
       st.push(i,j) ;
+      st.col[st.ptr-1] = -1 ;
       if( a[i][j] == 0 )
         st.dir[st.ptr-1] = 5 ;
     }
-    noLoop() ;
+  st.push(0,0) ;
+  noLoop() ;
 }
 
 stack st = new stack() ;
@@ -53,8 +55,22 @@ boolean cntused = false ;
 void draw() {
   while( !st.empty() )
   {
+    if( st.xtop() == 0 && st.ytop() == 0 )
+    {
+      st.pop() ;
+      return ;
+    }
     int tx = st.xtop() ;
     int ty = st.ytop() ;
+    if( st.ctop() == -1 )
+    {
+      st.col[st.ptr-1] = 0 ;
+      if( cntused )
+      {
+        cntused = false ;
+        count++ ;
+      }
+    }
     if( st.ctop() == 0 )
     {
       println("a") ;
@@ -105,19 +121,11 @@ void draw() {
         st.dir[st.ptr-1]++ ;
         st.push(tx,ty) ;
         grid[tx][ty].currentColor();
+        delay(dt) ;
         st.col[ st.ptr - 1 ]++ ;
         st.dir[st.ptr-1] = 5 ;
         return ;
       }
-      //if( st.ctop() == 1 )
-      //{
-      //  println(" ~3") ;
-      //  grid[tx][ty].markedColor();
-      //  println("d") ;
-      //  delay(dt) ;
-      //  st.col[ st.ptr - 1 ]++ ;
-      //  return ;
-      //}
       if( a[tx][ty] != 0 && b[tx][ty] == 0 )
       {
         println(" ~6") ;
@@ -129,18 +137,6 @@ void draw() {
         st.col[ st.ptr - 1 ]++ ;
         return ;
       }
-      
-      //if( st.ctop() == 2 )
-      //{
-      //  println(" ~4") ;
-      //  println("e") ;
-      //  grid[tx][ty].returnColor(tx, ty);
-      //  println("!") ;
-      //  delay(dt) ;
-      //  st.col[ st.ptr - 1 ]++ ;
-      //  return ;
-      //}
-      
     }
     println("f") ;
     grid[ st.xtop() ][ st.ytop() ].returnColor(st.xtop(), st.ytop()) ;
@@ -148,24 +144,6 @@ void draw() {
     st.pop() ;
     return ;
   }
-  
-  //for (int i = 1; i <= N; i++)                // the process of dfs
-  //{
-  //  for (int j = 1; j <= N; j++)
-  //  {
-  //    grid[i][j].currentColor();
-  //    delay(dt) ;
-  //    if (a[i][j] != 0 && b[i][j] == 0)
-  //    {
-  //      grid[i][j].markedColor();
-  //      b[i][j] = count;
-  //      count++;
-  //      delay(dt);
-  //      dfs(i, j);
-  //    }
-  //    grid[i][j].returnColor(i, j);
-  //  }
-  //}
   
   Max();
   
@@ -175,9 +153,11 @@ void draw() {
       print("  "+b[i][j]) ;
     println() ;
   }
-  
-  
   noLoop() ;
+}
+void mousePressed()
+{
+  loop() ;
 }
 void keyPressed()
 {

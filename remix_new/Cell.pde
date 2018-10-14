@@ -1,4 +1,4 @@
-class Cell
+public class Cell
 {
   int x, y, w, h;
   boolean marked ;
@@ -73,4 +73,5 @@ class Cell
     fill(128) ;
     rect(y, x, w, h);
   }
+  
 }
