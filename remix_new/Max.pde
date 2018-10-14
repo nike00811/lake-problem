@@ -9,7 +9,7 @@ void Max()
       sum[b[i][j]] += a[i][j];
 
   int max = -1, index = 0 ;
-  for (int i = 0; i < count; i++)
+  for (int i = 0; i <= count; i++)
     if (sum[i] > max)
     {
       max = sum[i];
